@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace percepteron_lab_1__by_Vahid_Hajiyev
 {
@@ -16,6 +16,7 @@ namespace percepteron_lab_1__by_Vahid_Hajiyev
         float output;
         float[] error = new float[8];
         float sum_error = 0;
+
         float[] apple1 = { 0.21835F, 0.81884F, 1 };
         float[] apple2 = { 0.14115F, 0.83535F, 1 };
         float[] apple3 = { 0.37022F, 0.8111F, 1 };
@@ -25,10 +26,13 @@ namespace percepteron_lab_1__by_Vahid_Hajiyev
         float[] apple7 = { 0.55223F, 0.83449F, 1 };
         float[] apple8 = { 0.16975F, 0.84049F, 1 };
         float[] apple9 = { 0.49187F, 0.80889F, 1 };
+
         float[] pear1 = { 0.14913F, 0.77104F, -1 };
         float[] pear2 = { 0.18474F, 0.6279F, -1 };
         float[] pear3 = { 0.08838F, 0.62068F, -1 };
         float[] pear4 = { 0.098166F, 0.79092F, -1 };
+
+
         //--------------------------------------------------------------------------------------------------------------------------------------
         // giving random numbers to w0, w1, and bias only 1 time 
 
@@ -169,8 +173,6 @@ namespace percepteron_lab_1__by_Vahid_Hajiyev
             error[6] = desiredOutput[6] - receviedOutput[6];
             error[7] = desiredOutput[7] - receviedOutput[7];
 
-
-
             //Sending received output and desired output array to screen(before training)
 
             foreach (double rcvdoutp in receviedOutput)
@@ -196,7 +198,6 @@ namespace percepteron_lab_1__by_Vahid_Hajiyev
                 updateSet[3] = apple1[1];
                 updateSet[4] = error[0];
                 updateSet[5] = bias;
-
 
                 return updateSet;
             }
@@ -228,7 +229,6 @@ namespace percepteron_lab_1__by_Vahid_Hajiyev
                 updateSet[4] = error[2];
                 updateSet[5] = bias;
 
-
                 return updateSet;
             }
 
@@ -257,7 +257,6 @@ namespace percepteron_lab_1__by_Vahid_Hajiyev
                 updateSet[3] = apple5[1];
                 updateSet[4] = error[4];
                 updateSet[5] = bias;
-
 
                 return updateSet;
             }
@@ -352,9 +351,9 @@ namespace percepteron_lab_1__by_Vahid_Hajiyev
                 Console.WriteLine("weights[" + i + "] = " + pg.weights[i]);
             }
 
-
             int k = 0;
-            //***********************----training---**********************************************
+
+            //***********************----TRAINING AND TESTING---**********************************************
             while (updateSet[0] != 0)
             {
                 k++;
@@ -363,12 +362,30 @@ namespace percepteron_lab_1__by_Vahid_Hajiyev
                 pg.bias = pg.updateBias(updateSet[5], updateSet[4], pg.learningRate);
                 updateSet = pg.calcualteOutput(pg.weights, pg.bias);
                 Console.WriteLine("------------------------------------------------");
+
+
+                float v_apple_6 = (pg.apple6[0] * pg.weights[0] + pg.apple6[1] * pg.weights[1] + pg.bias);
+                float v_apple_7 = (pg.apple7[0] * pg.weights[0] + pg.apple7[1] * pg.weights[1] + pg.bias);
+                float v_apple_8 = (pg.apple8[0] * pg.weights[0] + pg.apple8[1] * pg.weights[1] + pg.bias);
+                float v_apple_9 = (pg.apple9[0] * pg.weights[0] + pg.apple9[1] * pg.weights[1] + pg.bias);
+
+                float v_pear_4 = (pg.pear4[0] * pg.weights[0] + pg.pear4[1] * pg.weights[1] + pg.bias);
+
+                if (v_apple_6 > 0 && v_apple_7 > 0 && v_apple_8 > 0 && v_apple_9 > 0 && v_pear_4 < 0)
+                {
+                    Console.WriteLine("program finded universal values at " + k + "th try");
+                    Console.WriteLine("updated universal weight[0] = " + pg.weights[0]);
+                    Console.WriteLine("updated universal weight[1] = " + pg.weights[1]);
+                    Console.WriteLine("updated bias = " + pg.bias);
+
+                }
+                else
+                {
+                    updateSet[0] = 1;
+                }
+
             }
-            
-            Console.WriteLine("program finded universal values at "+ k + "th try");
-            Console.WriteLine("updated universal weight[0] = " + pg.weights[0]);
-            Console.WriteLine("updated universal weight[1] = " + pg.weights[1]);
-            Console.WriteLine("updated bias = " + pg.bias);
+
 
         }
     }
